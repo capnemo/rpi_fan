@@ -2,4 +2,5 @@
 *.o
 *.ko
 *.mod.c
+*.swp
 tune

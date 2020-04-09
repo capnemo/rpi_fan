@@ -14,6 +14,17 @@
 
 uint64_t fan_control::period = 10000000;
 
+const char *pwm_chip = "/sys/class/pwm/pwmchip0/pwm0";
+const char *pwm_export = "/sys/class/pwm/pwmchip0/export";
+const char *pwm_period = "/sys/class/pwm/pwmchip0/pwm0/period";
+const char *pwm_enable = "/sys/class/pwm/pwmchip0/pwm0/enable";
+const char *pwm_unexport = "/sys/class/pwm/pwmchip0/unexport";
+const char *pwm_duty_cycle = "/sys/class/pwm/pwmchip0/pwm0/duty_cycle";
+
+/*
+ * Initialize the class and the pwm hardware.
+ * The period is hard coded and is specific to the raspberry pi 3 b pwm.
+ */
 int8_t fan_control::init()
 {
     if (setup_pwm(period, 0) != 0) 
@@ -22,11 +33,17 @@ int8_t fan_control::init()
     return 0;
 }
 
+/*
+ * Initializes the pwn to a specific period and duty cycle.
+ * @period:      Period of the pwm hardware or the max duty cycle.
+ * @duty_cycle:  Starting duty cycle. Should be 0 to keep the fan still.
+ */
+
 int8_t fan_control::setup_pwm(uint64_t period, uint64_t duty_cycle)
 {
     struct stat pwm_stat;
-    if (stat("/sys/class/pwm/pwmchip0/pwm0", &pwm_stat) != 0) {
-        int pwm_fd = open("/sys/class/pwm/pwmchip0/export", O_WRONLY);
+    if (stat(pwm_chip, &pwm_stat) != 0) {
+        int pwm_fd = open(pwm_export, O_WRONLY);
         if (pwm_fd == -1)
             return -2;
      
@@ -39,7 +56,7 @@ int8_t fan_control::setup_pwm(uint64_t period, uint64_t duty_cycle)
         close(pwm_fd);
     }
  
-    int period_fd = open("/sys/class/pwm/pwmchip0/pwm0/period", O_WRONLY);
+    int period_fd = open(pwm_period, O_WRONLY);
     if (period_fd == -1) 
         return -5;
 
@@ -55,7 +72,7 @@ int8_t fan_control::setup_pwm(uint64_t period, uint64_t duty_cycle)
     if (set_duty_cycle(duty_cycle) == -1) 
         return -7;
 
-    int enb_fd = open("/sys/class/pwm/pwmchip0/pwm0/enable", O_WRONLY);
+    int enb_fd = open(pwm_enable, O_WRONLY);
     if (enb_fd == -1) 
         return -8;
 
@@ -68,6 +85,11 @@ int8_t fan_control::setup_pwm(uint64_t period, uint64_t duty_cycle)
 
     return 0;
 }
+
+/*
+ *  Disables pwm. This will also cause the fan to turn off.
+ *
+ */
 
 void fan_control::disable_pwm()
 {
@@ -92,6 +114,12 @@ void fan_control::disable_pwm()
     close(exp_fd);
 }
 
+/*
+ * Sets the duty cycle of the pwm hardware and therefore the fan.
+ * @duty_cycle: The duty cycle. The fraction duty_cycle/period is
+ *              the fraction of max speed of the fan.
+ *
+ */
 int8_t fan_control::set_duty_cycle(uint64_t duty_cycle)
 {
     int dc_fd = open("/sys/class/pwm/pwmchip0/pwm0/duty_cycle", O_WRONLY);

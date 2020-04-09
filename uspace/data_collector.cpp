@@ -12,19 +12,12 @@
 
 #include "data_collector.h"
 
-void data_collector::monitor_until_steady()
-{
-    uint32_t total_samples = monitor_time * samples_per_second;
-    for (uint32_t i = 0; i < total_samples; i++) {
-        temp_vec.push_back(get_cpu_temp());
-        usleep(1000000 / samples_per_second);
-        if ((i > total_samples/3) && (is_invariant(i - 10, 10))) {
-            steady_state_temp = temp_vec[i - 10];
-            break;
-        }
-    }
-}
 
+/* 
+ * monitor_temperature()
+ * Monitors the temperature of the cpu for the specified time and at the
+ * specified sample rate.
+ */
 void data_collector::monitor_temperature()
 {
     for (uint32_t i = 0; i < monitor_time * samples_per_second; i++) {
@@ -33,6 +26,11 @@ void data_collector::monitor_temperature()
     }
 }
 
+/* 
+ * get_constant_temperature()
+ * Returns the average of the monitored temperatures.
+ * Has to be called after monitor_temperature()
+ */
 int32_t data_collector::get_constant_temperature()
 {
     int32_t sum = 0;
@@ -43,50 +41,14 @@ int32_t data_collector::get_constant_temperature()
 }
 
 /*
-int32_t data_collector::monitor_temperature(int32_t mon_time, 
-                                         int32_t sampling_rate)
-{
-    std::vector<int32_t> t_vec;
-    uint32_t total_samples = mon_time * sampling_rate;
-    for (uint32_t i = 0; i < total_samples; i++) {
-        t_vec.push_back(get_cpu_temp());
-        usleep(1000000 / sampling_rate);
-    }
+ * find_sensor_error()
+ * Finds the temperature sensor error.
+ * Returns the difference between the most common and the second most common
+ * values. Assumes no load and 0 fan speed.
+ * Has to be called after monitor_temperature()
+ */
 
-    int32_t sum = 0;
-    for (auto m:t_vec) 
-        sum += m;
-
-    return sum/t_vec.size();
-}
-*/
-bool data_collector::is_invariant(uint32_t start, uint32_t length)
-{
-    std::unordered_set<int32_t> uniq;
-    for (uint32_t i = start; i < start + length; i++)
-        uniq.insert(temp_vec[i]);
-
-    if (uniq.size() == 1)
-        return true;
-
-    std::map<int32_t, int32_t> ranks;
-    for (auto m:uniq)
-        ranks.insert(std::pair<uint32_t, uint32_t>(uniq.count(m), m));
-
-    std::map<int32_t, int32_t>::iterator hi,nx;
-    hi = ranks.end();
-    hi--;
-    nx = hi;
-    nx--;
-
-    if ((std::abs(hi->second - nx->second) <= 1.2 * sensor_error) &&
-       ((hi->first + nx->first) > 0.7 * length))
-        return true;
-
-    return false;
-}
-
-int32_t data_collector::find_sensor_error() //set sensor_error
+int32_t data_collector::find_sensor_error()
 {
     std::map<uint32_t, uint32_t> ranks;
 
@@ -105,9 +67,14 @@ int32_t data_collector::find_sensor_error() //set sensor_error
     std::map<int32_t, int32_t>::iterator mpIt = sorted.end();
     mpIt--;
     sensor_error = std::abs(mpIt->second - (--mpIt)->second);
-    printf("%d\n", sensor_error);
     return sensor_error;
 }
+
+/*
+ * get_cpu_temp
+ * Returns the cpu temperature read from sysfs. The unit is millicentigrade.
+ *
+ */
 
 int32_t data_collector::get_cpu_temp()
 {
