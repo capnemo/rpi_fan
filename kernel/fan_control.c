@@ -174,7 +174,6 @@ static void pid_control(void)
     if ((current_temp = get_temperature()) == 0)
         return;
 
-    pr_info("current temperature is %d\n", current_temp);
     if (last_error == 0) {
         last_error = error;
     }
@@ -217,7 +216,8 @@ static void timer_func(struct timer_list *exp_timer)
     add_timer(exp_timer);
 }
 
-/* init_pid_timer
+/*
+ * init_pid_timer
  * Initialzes the timer.
  */
 static void init_pid_timer(void)
@@ -228,8 +228,8 @@ static void init_pid_timer(void)
 }
 
 /*
- * init_fan_control
- * Module entry point.
+ * init_fan_control 
+ * Module entry point. Initializes the pwm hardware and the timer.
  */
 static int init_fan_control(void)
 {
@@ -251,7 +251,7 @@ static int init_fan_control(void)
 
 /*
  * exit_fan_control
- * Module exit point.
+ * Module exit point. Deinitializes the timer and releases the pwm hardware
  */
 static void exit_fan_control(void)
 {
