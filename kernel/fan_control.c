@@ -160,7 +160,6 @@ static void pid_control(void)
     static int last_error = 0;
     static int error_sum = 0;
     static int total_time = 0;
-    static int prev_dc;
     int current_temp;
     int error = 0;
     int current_dc;
@@ -190,13 +189,15 @@ static void pid_control(void)
                                  (error_sum / total_time) + 
                                  period * (error - last_error));
 
+    pr_info("%d,%d,%d,%d,%d\n", error, error_sum/total_time,
+                                period * (error - last_error),
+                                current_temp, current_dc);
+
     if (current_dc > default_max_duty_cycle)
         current_dc = default_max_duty_cycle;
  
-    if (abs(current_dc - prev_dc) > (5 * default_max_duty_cycle)/100)   
-        set_fan_speed(current_dc);
+    set_fan_speed(current_dc);
 
-    prev_dc = current_dc;
     last_error = error;
 
     pr_info("fan speed is %d\n", current_dc);
