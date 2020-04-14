@@ -4,3 +4,7 @@
 *.mod.c
 *.swp
 tune
+.tmp_versions/
+Module.symvers
+modules.order
+
