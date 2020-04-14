@@ -2,6 +2,7 @@ CPU Fan for the Raspberry Pi b
 -------------------------------
 Implements the PID algorithm to control the CPU fan on a Raspberry Pi b. There are two main parts to this repo, one is the kernel module for the actual control of the fan(fan_control.ko) and the other is a userspace utility that finds the proportional constant(tune).
 The kernel module implements the following algorithm.
+
 ![PID Algorithm](https://wikimedia.org/api/rest_v1/media/math/render/svg/2ee061415fdfd20a6676bb328326795fec984cf1)
 
 Interfacing the fan to the board
@@ -15,7 +16,7 @@ Extract the code from github.
 - run the make command in the kernel and uspace directories.  
 - cd to the uspace directory and run the tune command. That will give you the proportional constant.
 - cd to the kernel directory and insert the kernel module with the following command.  
-*sudo insmod fan_control.ko set_point=<set point> prop_constant=<proportional constant>*  
+*sudo insmod fan_control.ko set_point=30000 prop_constant=650*  
 set_point is the desired temperature of the cpu in millicentigrade and prop_constant is the proportional constant as reported by the tune utility.
 
 Notes
