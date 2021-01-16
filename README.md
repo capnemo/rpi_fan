@@ -18,6 +18,7 @@ Extract the code from github.
 - cd to the kernel directory and insert the kernel module with the following command.  
 *sudo insmod fan_control.ko set_point=30000 prop_constant=650*  
 set_point is the desired temperature of the cpu in millicentigrade and prop_constant is the proportional constant as reported by the tune utility.
+![picture](img/graph.jpg)
 
 Notes
 -----
