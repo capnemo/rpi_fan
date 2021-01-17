@@ -13,6 +13,7 @@ The fan chosen is the Noctua NF-A4x10 5 volt pwm fan mainly because of its form 
 Running the software.
 ---------------------
 Extract the code from github.
+- copy the file pwm-overlay.dts to arch/arm/boot/dts/overlays and build the kernel.
 - run the make command in the kernel and uspace directories.  
 - cd to the uspace directory and run the tune command. That will give you the proportional constant.
 - cd to the kernel directory and insert the kernel module with the following command.  
