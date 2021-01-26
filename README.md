@@ -13,7 +13,7 @@ The fan chosen is the Noctua NF-A4x10 5 volt pwm fan mainly because of its form 
 Running the software.
 ---------------------
 Extract the code from github.
-- Follow the instructions at https://www.raspberrypi.org/documentation/linux/kernel/building.md and build the kernel.
+- Follow the instructions at https://www.raspberrypi.org/documentation/linux/kernel/building.md and build and test the kernel.
 - copy the file pwm-overlay.dts to arch/arm/boot/dts/overlays and re-build the kernel
 - run the make command in the kernel and uspace directories.  
 - cd to the uspace directory and run the tune command. That will give you the proportional constant.
