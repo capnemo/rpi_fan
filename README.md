@@ -8,7 +8,7 @@ The kernel module implements the following algorithm.
 Interfacing the fan to the board
 --------------------------------
 Raspberry pi series of SBCs come with power pins(5V) on pins 2 and 4. Ground is on pin 6 . PWM is available on pin 12 (GPIO18). 
-The fan chosen is the Noctua NF-A4x10 5 volt pwm fan mainly because of its form factor and the fact that it is controllable via PWM.
+The fan chosen is the Noctua NF-A4x10 5 volt pwm fan mainly because of its form factor and it is controllable via PWM.
 
 Running the software.
 ---------------------
@@ -25,4 +25,4 @@ set_point is the desired temperature of the cpu in millicentigrade and prop_cons
 
 Notes
 -----
-The tune utility will run the fan at half of maximum speed for 60 seconds and calculate the proportional constant from the temperature differences from before and after. In tests, we have noted a temperature decrease of upto 20 degrees centigrade under load.
+The tune utility will run the fan at half of maximum speed for 60 seconds and calculate the proportional constant from the temperature differences from before and after. In tests, we have noted a temperature decrease of upto 20 degrees centigrade or more under load. Raspberry Pi 3b uses pwm for its audio. Onboard audio is unusable while the driver is active. HDMI audio is unaffected.
