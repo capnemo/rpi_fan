@@ -1,6 +1,6 @@
-CPU Fan for the Raspberry Pi b
+CPU Fan for the Raspberry Pi 3 b
 -------------------------------
-Implements the PID algorithm to control the CPU fan on a Raspberry Pi b. There are two main parts to this repo, one is the kernel module for the actual control of the fan(fan_control.ko) and the other is a userspace utility that finds the proportional constant(tune).
+Implements the PID algorithm to control the CPU fan on a Raspberry Pi3 b. There are two main parts to this repo, one is the kernel module for the actual control of the fan(fan_control.ko) and the other is a userspace utility that finds the proportional constant(tune).
 The kernel module implements the following algorithm.
 
 ![PID Algorithm](https://wikimedia.org/api/rest_v1/media/math/render/svg/2ee061415fdfd20a6676bb328326795fec984cf1)
